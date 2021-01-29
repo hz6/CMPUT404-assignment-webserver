@@ -24,4 +24,9 @@ examples thus some of the code is Copyright © 2001-2013 Python
 Software Foundation; All Rights Reserved under the PSF license (GPL
 compatible) http://docs.python.org/2/library/socketserver.html
 
-Anthony Zhang: https://github.com/hz6/CMPUT404-assignment-webserver
+GitHub Link: https://github.com/hz6/CMPUT404-assignment-webserver
+
+Haonan Zhang: hz6
+
+Collaboration:
+chushan, yanshan

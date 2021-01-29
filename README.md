@@ -30,3 +30,5 @@ Haonan Zhang: hz6
 
 Collaboration:
 chushan, yanshan
+
+The screenshot is from Chrome

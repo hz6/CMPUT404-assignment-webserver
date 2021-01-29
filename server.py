@@ -1,7 +1,7 @@
 #  coding: utf-8
+import os
 import socketserver
 import socket
-import os
 
 # Copyright 2013 Abram Hindle, Eddie Antonio Santos
 #
@@ -40,7 +40,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
         if (pld == None):
             self.request.send("HTTP/1.1 400 Bad Request \n")
         else:
-            # pld_data = pld.split()
+            # print("Payload: ", pld.split())
             (http_method, path) = (pld.split()[0], pld.split()[1])
 
             if http_method != "GET":  # Only GET Method is allowed
@@ -49,37 +49,35 @@ class MyWebServer(socketserver.BaseRequestHandler):
             else:
                 if os.path.realpath(os.getcwd() + '/www' + path).startswith(os.getcwd() + '/www'):
                     if os.path.exists("./www" + path + "/index.html") and path.endswith('/'):
-                        path = path + "index.html"
-                        body = open("./www" + path, 'r').read()
-                        if body:
+                        res_body = open("./www" + path + "/index.html").read()
+                        if (res_body == None):
+                            self.request.send(
+                                "HTTP/1.1 404 Not Found".encode())
+                        else:
                             self.request.send("HTTP/1.1 200 OK \n".encode())
                             self.request.send(
                                 "Content-type: text/html \n".encode())
-                            self.request.sendall(body.encode())
-                        else:
-                            self.request.send(
-                                "HTTP/1.1 404 Not Found".encode())
+                            self.request.sendall(res_body.encode())
                     elif os.path.exists("./www" + path) and path.endswith(".html"):
-                        body = open("./www"+path, 'r').read()
+                        res_body = open("./www" + path).read()
                         self.request.send("HTTP/1.1 200 OK \n".encode())
                         self.request.send(
                             "Content-type: text/html \n".encode())
-                        self.request.sendall(body.encode())
+                        self.request.sendall(res_body.encode())
 
                     elif os.path.exists("./www" + path) and path.endswith(".css"):
-                        body = open("./www" + path, 'r').read()
-                        self.request.send("HTTP/1.1 200 OK\r\n".encode())
+                        res_body = open("./www" + path).read()
+
+                        self.request.send(
+                            "HTTP/1.1 200 OK \n".encode())
                         self.request.send(
                             "Content-type: text/css \n".encode())
-                        self.request.sendall(body.encode())
+                        self.request.sendall(res_body.encode())
                     else:
                         try:
-                            body = open('./www' + path +
-                                        '/index.html', 'r').read()
+                            res_body = open('./www' + path + '/index.html')
                             self.request.send(
-                                "HTTP/1.1 301 Moved Permanently \n".encode())
-                            self.request.send(
-                                "Content-type: text/html \n".encode())
+                                "HTTP/1.1 301 Moved Permanently \n Content-type: text/html \n".encode())
                             self.request.sendall(
                                 "http://127.0.0.1:8080" + path + "/".encode())
                         except:
@@ -88,6 +86,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 else:
                     self.request.send(
                         "HTTP/1.1 404 Not Found \n".encode())
+        # self.request.sendall(bytearray("OK\n", 'utf-8'))
 
 
 if __name__ == "__main__":

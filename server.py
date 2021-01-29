@@ -54,12 +54,14 @@ class MyWebServer(socketserver.BaseRequestHandler):
                             self.request.send(
                                 "HTTP/1.1 404 Not Found".encode())
                         else:
+                            # send status code first
                             self.request.send("HTTP/1.1 200 OK \n".encode())
                             self.request.send(
                                 "Content-type: text/html \n".encode())
                             self.request.sendall(res_body.encode())
                     elif os.path.exists("./www" + path) and path.endswith(".html"):
                         res_body = open("./www" + path).read()
+                        # send status code first
                         self.request.send("HTTP/1.1 200 OK \n".encode())
                         self.request.send(
                             "Content-type: text/html \n".encode())
@@ -67,9 +69,8 @@ class MyWebServer(socketserver.BaseRequestHandler):
 
                     elif os.path.exists("./www" + path) and path.endswith(".css"):
                         res_body = open("./www" + path).read()
-
-                        self.request.send(
-                            "HTTP/1.1 200 OK \n".encode())
+                        # send status code first
+                        self.request.send("HTTP/1.1 200 OK \n".encode())
                         self.request.send(
                             "Content-type: text/css \n".encode())
                         self.request.sendall(res_body.encode())

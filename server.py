@@ -47,8 +47,8 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 self.request.send(
                     "HTTP/1.1 405 Method Not Allowed \n".encode())
             else:
-                if os.path.realpath(os.getcwd() + '/www' + path).startswith(os.getcwd() + '/www'):
-                    if os.path.exists("./www" + path + "/index.html") and path.endswith('/'):
+                if os.path.realpath(os.getcwd() + "/www" + path).startswith(os.getcwd() + "/www"):
+                    if os.path.exists("./www" + path + "/index.html") and path.endswith("/"):
                         res_body = open("./www" + path + "/index.html").read()
                         if (res_body == None):
                             self.request.send(
@@ -78,7 +78,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
 
                     else:
                         try:
-                            res_body = open('./www' + path + '/index.html')
+                            res_body = open("./www" + path + "/index.html")
                             self.request.send(
                                 "HTTP/1.1 301 Moved Permanently \n Content-type: text/html \n".encode())
                             self.request.sendall(

@@ -89,7 +89,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 else:
                     req.send(
                         "HTTP/1.1 404 Not Found \n".encode())
-        # self.request.sendall(bytearray("OK\n", 'utf-8'))
+        self.request.sendall(bytearray("OK\n", 'utf-8'))
 
 
 if __name__ == "__main__":

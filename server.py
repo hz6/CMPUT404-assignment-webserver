@@ -32,62 +32,62 @@ import socket
 class MyWebServer(socketserver.BaseRequestHandler):
 
     def handle(self):
-        self.data = self.request.recv(1024).strip()
+        req = self.request
+        self.data = req.recv(1024).strip()
         print("Got a request of: %s\n" % self.data)
 
         pld = self.data.decode()
 
         if (pld == None):
-            self.request.send("HTTP/1.1 400 Bad Request \n")
+            req.send("HTTP/1.1 400 Bad Request \n")
         else:
             # print("Payload: ", pld.split())
             (http_method, path) = (pld.split()[0], pld.split()[1])
 
             if http_method != "GET":  # Only GET Method is allowed
-                self.request.send(
+                req.send(
                     "HTTP/1.1 405 Method Not Allowed \n".encode())
             else:
                 if os.path.realpath(os.getcwd() + "/www" + path).startswith(os.getcwd() + "/www"):
                     if os.path.exists("./www" + path + "/index.html") and path.endswith("/"):
                         res_body = open("./www" + path + "/index.html").read()
                         if (res_body == None):
-                            self.request.send(
+                            req.send(
                                 "HTTP/1.1 404 Not Found \n".encode())
                         else:
                             # send status code first
-                            self.request.send("HTTP/1.1 200 \n".encode())
-                            self.request.send(
+                            req.send("HTTP/1.1 200 \n".encode())
+                            req.send(
                                 "Content-type: text/html \n".encode())
-                            self.request.sendall(res_body.encode())
+                            req.sendall(res_body.encode())
 
                     elif os.path.exists("./www" + path) and path.endswith(".css"):
                         res_body = open("./www" + path).read()
                         # send status code first
-                        self.request.send("HTTP/1.1 200 \n".encode())
-                        self.request.send(
+                        req.send("HTTP/1.1 200 \n".encode())
+                        req.send(
                             "Content-type: text/css \n".encode())
-                        self.request.sendall(res_body.encode())
+                        req.sendall(res_body.encode())
 
                     elif os.path.exists("./www" + path) and path.endswith(".html"):
                         res_body = open("./www" + path).read()
                         # send status code first
-                        self.request.send("HTTP/1.1 200 \n".encode())
-                        self.request.send(
+                        req.send("HTTP/1.1 200 \n".encode())
+                        req.send(
                             "Content-type: text/html \n".encode())
-                        self.request.sendall(res_body.encode())
+                        req.sendall(res_body.encode())
 
                     else:
                         try:
                             res_body = open("./www" + path + "/index.html")
-                            self.request.send(
-                                "HTTP/1.1 301 Moved Permanently \n Content-type: text/html \n".encode())
-                            self.request.sendall(
+                            req.send(
+                                "HTTP/1.1 301 Moved Permanently \n".encode())
+                            req.sendall(
                                 ("http://127.0.0.1:8080" + path).encode())
                         except:
-                            self.request.send(
-                                "HTTP/1.1 404 Not Found \n".encode())
+                            req.send("HTTP/1.1 404 Not Found \n".encode())
                 else:
-                    self.request.send(
+                    req.send(
                         "HTTP/1.1 404 Not Found \n".encode())
         # self.request.sendall(bytearray("OK\n", 'utf-8'))
 

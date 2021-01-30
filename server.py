@@ -52,10 +52,10 @@ class MyWebServer(socketserver.BaseRequestHandler):
                         res_body = open("./www" + path + "/index.html").read()
                         if (res_body == None):
                             self.request.send(
-                                "HTTP/1.1 404 Not Found".encode())
+                                "HTTP/1.1 404 Not Found \n".encode())
                         else:
                             # send status code first
-                            self.request.send("HTTP/1.1 200 OK \n".encode())
+                            self.request.send("HTTP/1.1 200 \n".encode())
                             self.request.send(
                                 "Content-type: text/html \n".encode())
                             self.request.sendall(res_body.encode())
@@ -63,7 +63,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     elif os.path.exists("./www" + path) and path.endswith(".css"):
                         res_body = open("./www" + path).read()
                         # send status code first
-                        self.request.send("HTTP/1.1 200 OK \n".encode())
+                        self.request.send("HTTP/1.1 200 \n".encode())
                         self.request.send(
                             "Content-type: text/css \n".encode())
                         self.request.sendall(res_body.encode())
@@ -71,7 +71,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                     elif os.path.exists("./www" + path) and path.endswith(".html"):
                         res_body = open("./www" + path).read()
                         # send status code first
-                        self.request.send("HTTP/1.1 200 OK \n".encode())
+                        self.request.send("HTTP/1.1 200 \n".encode())
                         self.request.send(
                             "Content-type: text/html \n".encode())
                         self.request.sendall(res_body.encode())
@@ -82,7 +82,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                             self.request.send(
                                 "HTTP/1.1 301 Moved Permanently \n Content-type: text/html \n".encode())
                             self.request.sendall(
-                                "http://127.0.0.1:8080" + path + "/".encode())
+                                ("http://127.0.0.1:8080" + path).encode())
                         except:
                             self.request.send(
                                 "HTTP/1.1 404 Not Found \n".encode())
